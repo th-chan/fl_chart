@@ -1314,10 +1314,17 @@ class LineChartPainter extends AxisChartPainter<LineChartData> {
       tooltipTopPosition =
           mostTopOffset.dy - tooltipHeight - tooltipData.tooltipMargin;
     }
+    double tooltipLeftPosition;
+    if (tooltipData.showStartOfLine) {
+      tooltipLeftPosition = getPixelX(showOnSpot.x, chartUsableSize, holder);
+    } else {
+      tooltipLeftPosition =
+          mostTopOffset.dx - (tooltipWidth / 2);
+    }
 
     /// draw the background rect with rounded radius
     var rect = Rect.fromLTWH(
-      mostTopOffset.dx - (tooltipWidth / 2),
+      tooltipLeftPosition,
       tooltipTopPosition,
       tooltipWidth,
       tooltipHeight,

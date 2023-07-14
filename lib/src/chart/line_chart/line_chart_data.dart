@@ -1563,6 +1563,9 @@ class LineTouchTooltipData with EquatableMixin {
   /// Forces the tooltip container to top of the line, default 'false'
   final bool showOnTopOfTheChartBoxArea;
 
+  /// Forces the tooltip container to start of the line, default 'false'
+  final bool showStartOfLine;
+
   /// Controls the rotation of the tooltip.
   final double rotateAngle;
 
@@ -1589,6 +1592,7 @@ class LineTouchTooltipData with EquatableMixin {
     bool? fitInsideHorizontally,
     bool? fitInsideVertically,
     bool? showOnTopOfTheChartBoxArea,
+    bool? showStartOfLine,
     double? rotateAngle,
   })  : tooltipBgColor = tooltipBgColor ?? Colors.blueGrey.darken(15),
         tooltipRoundedRadius = tooltipRoundedRadius ?? 4,
@@ -1600,6 +1604,7 @@ class LineTouchTooltipData with EquatableMixin {
         fitInsideHorizontally = fitInsideHorizontally ?? false,
         fitInsideVertically = fitInsideVertically ?? false,
         showOnTopOfTheChartBoxArea = showOnTopOfTheChartBoxArea ?? false,
+        showStartOfLine = showStartOfLine ?? false,
         rotateAngle = rotateAngle ?? 0.0,
         super();
 
@@ -1615,6 +1620,7 @@ class LineTouchTooltipData with EquatableMixin {
         fitInsideHorizontally,
         fitInsideVertically,
         showOnTopOfTheChartBoxArea,
+        showStartOfLine,
         rotateAngle
       ];
 }

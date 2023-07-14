@@ -608,6 +608,10 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
 
     final tooltipWidth = textWidth + tooltipData.tooltipPadding.horizontal;
     final tooltipHeight = textHeight + tooltipData.tooltipPadding.vertical;
+    final tooltipArrowWidth = 14.0;
+    final tooltipArrowHeight = 12.0;
+    final lineBetweenTooltipAndBarWidth = 1.0;
+    final lineBetweenTooltipAndBarHeight = barOffset.dy - tooltipHeight - tooltipArrowHeight;
 
     final zeroY = getPixelY(0, chartUsableSize, holder);
     final barTopY = min(zeroY, barOffset.dy);
@@ -615,14 +619,20 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
     final drawTooltipOnTop = tooltipData.direction == TooltipDirection.top ||
         (tooltipData.direction == TooltipDirection.auto &&
             showOnRodData.y >= 0);
-    final tooltipTop = drawTooltipOnTop
-        ? barTopY - tooltipHeight - tooltipData.tooltipMargin
-        : barBottomY + tooltipData.tooltipMargin;
+    // final tooltipTop = drawTooltipOnTop
+    //     ? barTopY - tooltipHeight - tooltipData.tooltipMargin
+    //     : barBottomY + tooltipData.tooltipMargin;
+    final tooltipTop = 0.0;
+    final lineBetweenTooltipAndBarTop = drawTooltipOnTop
+        ? barTopY - lineBetweenTooltipAndBarHeight
+        : barBottomY;
 
     /// draw the background rect with rounded radius
     // ignore: omit_local_variable_types
     Rect rect = Rect.fromLTWH(barOffset.dx - (tooltipWidth / 2), tooltipTop,
         tooltipWidth, tooltipHeight);
+    Rect lineBetweenTooltipAndBar = Rect.fromLTWH(barOffset.dx - (lineBetweenTooltipAndBarWidth / 2), lineBetweenTooltipAndBarTop,
+        lineBetweenTooltipAndBarWidth, lineBetweenTooltipAndBarHeight);
 
     if (tooltipData.fitInsideHorizontally) {
       if (rect.left < 0) {
@@ -668,6 +678,17 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
       }
     }
 
+    final tooltipArrowP1x = rect.right - (tooltipWidth / 2) - (tooltipArrowWidth / 2);
+    final tooltipArrowP1y = tooltipHeight;
+    final tooltipArrowP2x = rect.right - (tooltipWidth / 2) + (tooltipArrowWidth / 2);
+    final tooltipArrowP3x = barOffset.dx - (lineBetweenTooltipAndBarWidth / 2);
+    final tooltipArrowP3y = tooltipHeight + tooltipArrowHeight;
+    final tooltipArrowPath = Path();
+    tooltipArrowPath.moveTo(tooltipArrowP1x, tooltipArrowP1y);
+    tooltipArrowPath.lineTo(tooltipArrowP2x, tooltipArrowP1y);
+    tooltipArrowPath.lineTo(tooltipArrowP3x, tooltipArrowP3y);
+    tooltipArrowPath.close();
+
     final radius = Radius.circular(tooltipData.tooltipRoundedRadius);
     final roundedRect = RRect.fromRectAndCorners(rect,
         topLeft: radius,
@@ -700,6 +721,8 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
         canvasWrapper.drawText(tp, drawOffset);
       },
     );
+    canvasWrapper.drawRect(lineBetweenTooltipAndBar, _bgTouchTooltipPaint);
+    canvasWrapper.drawPath(tooltipArrowPath, _bgTouchTooltipPaint);
   }
 
   @visibleForTesting
